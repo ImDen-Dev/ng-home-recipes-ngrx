@@ -1,0 +1,21 @@
+<a
+  href="#"
+  class="list-group-item list-group-item-action"
+  (click)="onSelectedRecipe()"
+>
+  <div class="w-100">
+    <h5 class="mb-1">{{ recipeItem.name }}</h5>
+  </div>
+  <div class="d-md-flex justify-content-md-between w-100 align-items-center">
+    <p class="w-75 mb-0">
+      {{ recipeItem.description }}
+    </p>
+    <small class="h-50 w-25">
+      <img
+        class="rounded w-100"
+        [src]="recipeItem.imagePath"
+        [alt]="recipeItem.name"
+      />
+    </small>
+  </div>
+</a>

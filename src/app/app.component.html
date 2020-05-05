@@ -1,7 +1,11 @@
+<app-header (currentPage)="onNavigate($event)"></app-header>
 <div class="container">
   <div class="row">
     <div class="col-md-12">
-      <h1>Привет я работаю</h1>
+      <app-recipes *ngIf="navigate === 'recipes'"></app-recipes>
+      <app-shopping-list
+        *ngIf="navigate === 'shoppingList'"
+      ></app-shopping-list>
     </div>
   </div>
 </div>
