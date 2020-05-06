@@ -18,7 +18,9 @@
         <button class="dropdown-item" (click)="onAddToShoppingList()">
           Добавить в список покупок
         </button>
-        <a class="dropdown-item" href="#">Редактировать рецепт</a>
+        <a class="dropdown-item" [routerLink]="['edit']"
+          >Редактировать рецепт</a
+        >
         <a class="dropdown-item" href="#">Удалить рецепт</a>
       </div>
     </div>

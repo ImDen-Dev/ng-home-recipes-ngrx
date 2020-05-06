@@ -1,13 +1,14 @@
 <div class="row mb-2">
   <div class="col-md-12">
-    <button class="btn btn-primary">Новый рецепт</button>
+    <button class="btn btn-primary" routerLink="new">Новый рецепт</button>
   </div>
 </div>
 <div class="row">
   <div class="col-md-12">
     <app-recipe-item
-      *ngFor="let recipe of recipes"
+      *ngFor="let recipe of recipes; let i = index"
       [recipeItem]="recipe"
+      [id]="i"
     ></app-recipe-item>
   </div>
 </div>
