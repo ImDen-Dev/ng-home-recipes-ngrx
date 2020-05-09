@@ -3,16 +3,17 @@
     <app-shopping-list-edit></app-shopping-list-edit>
     <hr />
     <ul class="list-group">
-      <a
-        href="#"
+      <li
+        style="cursor: pointer"
         class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
-        *ngFor="let ingredient of ingredients"
+        *ngFor="let ingredient of ingredients; let i = index"
+        (click)="onEditItem(i)"
       >
         {{ ingredient.name }}
         <span class="badge badge-primary badge-pill">{{
           ingredient.amount
         }}</span>
-      </a>
+      </li>
     </ul>
   </div>
 </div>
