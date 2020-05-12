@@ -19,7 +19,7 @@ const routes: Routes = [
       { path: ':id/edit', component: RecipeEditComponent }
     ]
   },
-  { path: 'shoppinglist', component: ShoppingListComponent }
+  { path: 'shopping-list', component: ShoppingListComponent }
 ];
 
 @NgModule({

@@ -21,7 +21,9 @@
         <a class="dropdown-item" [routerLink]="['edit']"
           >Редактировать рецепт</a
         >
-        <a class="dropdown-item" href="#">Удалить рецепт</a>
+        <button class="dropdown-item" (click)="onDeleteRecipe()">
+          Удалить рецепт
+        </button>
       </div>
     </div>
   </div>
