@@ -13,17 +13,28 @@
         >
       </li>
       <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" routerLink="/auth">Войти</a>
+      </li>
+      <li class="nav-item" routerLinkActive="active">
         <a class="nav-link" routerLink="/shopping-list">Список покупок</a>
       </li>
     </ul>
     <ul class="navbar-nav ml-auto">
       <li class="nav-item dropdown" appDropdown>
-        <a class="nav-link dropdown-toggle" href="#" role="button">
+        <button
+          class="btn btn-secondary nav-link dropdown-toggle"
+          type="button"
+          role="button"
+        >
           Управление
-        </a>
+        </button>
         <div class="dropdown-menu">
-          <a class="dropdown-item" href="#">Сохранить рецепты</a>
-          <a class="dropdown-item" href="#">Загрузить рецепты</a>
+          <button class="dropdown-item" (click)="onSaveRecipes()">
+            Сохранить рецепты
+          </button>
+          <button class="dropdown-item" (click)="onFetchRecipes()">
+            Загрузить рецепты
+          </button>
         </div>
       </li>
     </ul>
