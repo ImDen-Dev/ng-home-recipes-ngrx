@@ -8,26 +8,26 @@
         routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: true }"
       >
-        <a class="nav-link" routerLink="/recipes"
+        <a class="nav-link" routerLink="/recipes" *ngIf="isAuthenticated"
           >Рецепты <span class="sr-only">(current)</span></a
         >
       </li>
-      <li class="nav-item" routerLinkActive="active">
-        <a class="nav-link" routerLink="/auth">Войти</a>
+      <li class="nav-item" routerLinkActive="active" *ngIf="!isAuthenticated">
+        <a class="nav-link" routerLink="/auth">Авторизация</a>
       </li>
       <li class="nav-item" routerLinkActive="active">
         <a class="nav-link" routerLink="/shopping-list">Список покупок</a>
       </li>
     </ul>
     <ul class="navbar-nav ml-auto">
-      <li class="nav-item dropdown" appDropdown>
-        <button
-          class="btn btn-secondary nav-link dropdown-toggle"
-          type="button"
+      <li class="nav-item dropdown" appDropdown *ngIf="isAuthenticated">
+        <a
+          class="nav-link dropdown-toggle"
           role="button"
+          style="cursor: pointer"
         >
           Управление
-        </button>
+        </a>
         <div class="dropdown-menu">
           <button class="dropdown-item" (click)="onSaveRecipes()">
             Сохранить рецепты
@@ -36,6 +36,16 @@
             Загрузить рецепты
           </button>
         </div>
+      </li>
+      <li>
+        <a
+          style="cursor: pointer"
+          class="nav-link"
+          *ngIf="isAuthenticated"
+          (click)="onLogout()"
+        >
+          Выйти
+        </a>
       </li>
     </ul>
   </div>
