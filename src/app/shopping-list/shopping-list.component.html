@@ -6,7 +6,10 @@
       <li
         style="cursor: pointer"
         class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
-        *ngFor="let ingredient of ingredients; let i = index"
+        *ngFor="
+          let ingredient of (ingredients | async).ingredients;
+          let i = index
+        "
         (click)="onEditItem(i)"
       >
         {{ ingredient.name }}
