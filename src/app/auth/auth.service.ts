@@ -1,153 +1,25 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { catchError, tap } from 'rxjs/operators';
-import { BehaviorSubject, throwError } from 'rxjs';
+import { Store } from '@ngrx/store';
 
-import { environment } from '../../environments/environment';
-
-import { UserModel } from './user.model';
-
-export interface AuthResponseData {
-  idToken: string;
-  email: string;
-  refreshToken: string;
-  expiresIn: string;
-  localId: string;
-  registered?: boolean;
-}
+import * as fromApp from '../store/app.reducer';
+import * as AuthActions from '../auth/store/auth.actions';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  user = new BehaviorSubject<UserModel>(null);
   private tokenExpirationTimer: any;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private store: Store<fromApp.AppState>) {}
 
-  signUp(email: string, password: string) {
-    return this.http
-      .post<AuthResponseData>(
-        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' +
-          environment.firebaseApiKey,
-        {
-          email,
-          password,
-          returnSecureToken: true
-        }
-      )
-      .pipe(
-        catchError(this.errorHandler),
-        tap(respData => {
-          this.handlerAuthentication(
-            respData.email,
-            respData.localId,
-            respData.idToken,
-            +respData.expiresIn
-          );
-        })
-      );
-  }
-
-  autoLogin() {
-    const userData: {
-      email: string;
-      userId: string;
-      _token: string;
-      _tokenExpirationDate: string;
-    } = JSON.parse(localStorage.getItem('userData'));
-
-    if (!userData) {
-      return;
-    }
-
-    const loadedUser = new UserModel(
-      userData.email,
-      userData.userId,
-      userData._token,
-      new Date(userData._tokenExpirationDate)
-    );
-
-    if (loadedUser.token) {
-      this.user.next(loadedUser);
-      const expirationDuration =
-        new Date(userData._tokenExpirationDate).getTime() -
-        new Date().getTime();
-      this.autoLogout(expirationDuration);
-    }
-  }
-
-  logIn(email: string, password: string) {
-    return this.http
-      .post<AuthResponseData>(
-        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' +
-          environment.firebaseApiKey,
-        {
-          email,
-          password,
-          returnSecureToken: true
-        }
-      )
-      .pipe(
-        catchError(this.errorHandler),
-        tap(respData => {
-          this.handlerAuthentication(
-            respData.email,
-            respData.localId,
-            respData.idToken,
-            +respData.expiresIn
-          );
-        })
-      );
-  }
-
-  autoLogout(expirationDuration: number) {
+  setLogoutTimer(expirationDuration: number) {
     this.tokenExpirationTimer = setTimeout(() => {
-      this.logout();
+      this.store.dispatch(new AuthActions.Logout());
     }, expirationDuration);
   }
 
-  logout() {
-    this.user.next(null);
-    localStorage.removeItem('userData');
-    this.router.navigate(['/auth']);
+  clearLogoutTimer() {
     if (this.tokenExpirationTimer) {
       clearTimeout(this.tokenExpirationTimer);
+      this.tokenExpirationTimer = null;
     }
-    this.tokenExpirationTimer = null;
-  }
-
-  private handlerAuthentication(
-    email: string,
-    userId: string,
-    token: string,
-    expiresIn: number
-  ) {
-    const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
-
-    const user = new UserModel(email, userId, token, expirationDate);
-
-    this.user.next(user);
-    localStorage.setItem('userData', JSON.stringify(user));
-    this.autoLogout(expiresIn * 1000);
-  }
-
-  private errorHandler(errorResp: HttpErrorResponse) {
-    let errorMessage = 'Неизвестная ошибка';
-
-    if (!errorResp.error || !errorResp.error.error) {
-      return throwError(errorMessage);
-    }
-    switch (errorResp.error.error.message) {
-      case 'EMAIL_EXISTS':
-        errorMessage = 'E-mail уже существует.';
-        break;
-      case 'EMAIL_NOT_FOUND':
-        errorMessage = 'E-mail не найден.';
-        break;
-      case 'INVALID_PASSWORD':
-        errorMessage = 'Неверный пароль.';
-        break;
-    }
-    return throwError(errorMessage);
   }
 }

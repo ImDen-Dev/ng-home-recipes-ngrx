@@ -2,8 +2,9 @@ import { RecipeModel } from './recipe.model';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 
+import * as fromApp from '../store/app.reducer';
 import * as ShoppingListActions from '../shopping-list/store/shopping-list.actions';
-import * as fromShoppingList from '../shopping-list/store/shopping-list.reducer';
+import * as RecipesActions from './store/recipes.actions';
 
 import { IngredientModel } from '../shared/ingredient.model';
 import { Subject } from 'rxjs';
@@ -13,12 +14,12 @@ export class RecipesService {
   updatedRecipes = new Subject<RecipeModel[]>();
   private recipes: RecipeModel[] = [];
 
-  constructor(private store: Store<fromShoppingList.AppState>) {}
+  constructor(private store: Store<fromApp.AppState>) {}
 
   setRecipes(recipes: RecipeModel[]) {
-    this.recipes = recipes;
-    console.log(this.recipes);
-    this.updatedRecipes.next(this.recipes.slice());
+    // this.recipes = recipes;
+    // this.updatedRecipes.next(this.recipes.slice());
+    this.store.dispatch(new RecipesActions.SetRecipes(recipes));
   }
 
   getRecipes() {
@@ -33,13 +34,13 @@ export class RecipesService {
     this.store.dispatch(new ShoppingListActions.AddIngredients(ingredients));
   }
 
-  updateRecipe(index: number, newRecipe: RecipeModel) {
-    this.recipes[index] = newRecipe;
+  addRecipe(newRecipe: RecipeModel) {
+    this.recipes.push(newRecipe);
     this.updatedRecipes.next(this.recipes.slice());
   }
 
-  addRecipe(newRecipe: RecipeModel) {
-    this.recipes.push(newRecipe);
+  updateRecipe(index: number, newRecipe: RecipeModel) {
+    this.recipes[index] = newRecipe;
     this.updatedRecipes.next(this.recipes.slice());
   }
 
