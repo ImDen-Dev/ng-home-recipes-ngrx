@@ -1,12 +1,10 @@
-import { Directive, ElementRef, HostListener, OnInit } from '@angular/core';
+import { Directive, ElementRef, HostListener } from '@angular/core';
 
 @Directive({
   selector: '[appDropdown]'
 })
-export class DropdownDirective implements OnInit {
+export class DropdownDirective {
   constructor(private elRef: ElementRef) {}
-
-  ngOnInit(): void {}
 
   @HostListener('document:click', ['$event']) mouseClick(event: Event) {
     this.elRef.nativeElement.contains(event.target as HTMLElement)
